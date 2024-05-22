@@ -1,0 +1,140 @@
+package com.mycompany.empresa;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+public class Empresa {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Empregado> empregados = new ArrayList<>();
+        
+        int opcao;
+        
+        do {
+            System.out.println("\nMenu:");
+            System.out.println("1. Criar novo empregado");
+            System.out.println("2. Promover empregado");
+            System.out.println("3. Aumentar salário do empregado");
+            System.out.println("4. Demitir empregado");
+            System.out.println("5. Fazer aniversário do empregado");
+            System.out.println("6. Mostrar detalhes dos empregados");
+            System.out.println("7. Sair");
+            System.out.print("Escolha uma opção: ");
+            
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1:
+                    criarEmpregado(scanner, empregados);
+                    break;
+                case 2:
+                    promoverEmpregado(scanner, empregados);
+                    break;
+                case 3:
+                    aumentarSalarioEmpregado(scanner, empregados);
+                    break;
+                case 4:
+                    demitirEmpregado(scanner, empregados);
+                    break;
+                case 5:
+                    fazerAniversarioEmpregado(scanner, empregados);
+                    break;
+                case 6:
+                    mostrarDetalhesEmpregados(empregados);
+                    break;
+                case 7:
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (opcao != 7);
+        
+        scanner.close();
+    }
+    
+    private static void criarEmpregado(Scanner scanner, ArrayList<Empregado> empregados) {
+        System.out.print("Nome do empregado: ");
+        String nome = scanner.nextLine();
+        System.out.print("Idade do empregado: ");
+        int idade = scanner.nextInt();
+        System.out.print("Salário do empregado: ");
+        double salario = scanner.nextDouble();
+        scanner.nextLine(); 
+        
+        Empregado empregado = new Empregado(nome, idade, salario);
+        empregados.add(empregado);
+        
+        System.out.println("Empregado criado com sucesso!");
+    }
+    
+    private static void promoverEmpregado(Scanner scanner, ArrayList<Empregado> empregados) {
+        Empregado empregado = selecionarEmpregado(scanner, empregados);
+        if (empregado != null) {
+            empregado.promocao();
+        }
+    }
+    
+    private static void aumentarSalarioEmpregado(Scanner scanner, ArrayList<Empregado> empregados) {
+        Empregado empregado = selecionarEmpregado(scanner, empregados);
+        if (empregado != null) {
+            System.out.print("Porcentagem de aumento: ");
+            double porcentagem = scanner.nextDouble();
+            scanner.nextLine(); 
+            empregado.aumentarSalario(porcentagem);
+            System.out.println("Salário aumentado com sucesso!");
+        }
+    }
+    
+    private static void demitirEmpregado(Scanner scanner, ArrayList<Empregado> empregados) {
+        Empregado empregado = selecionarEmpregado(scanner, empregados);
+        if (empregado != null) {
+            System.out.print("Motivo da demissão (1-Justa causa, 2-Decisão do empregador, 3-Aposentadoria): ");
+            int motivo = scanner.nextInt();
+            scanner.nextLine(); 
+            empregado.demitir(motivo);
+        }
+    }
+    
+    private static void fazerAniversarioEmpregado(Scanner scanner, ArrayList<Empregado> empregados) {
+        Empregado empregado = selecionarEmpregado(scanner, empregados);
+        if (empregado != null) {
+            empregado.fazerAniversario();
+            System.out.println("Feliz aniversário! Idade atual: " + empregado.getIdade());
+        }
+    }
+    
+    private static void mostrarDetalhesEmpregados(ArrayList<Empregado> empregados) {
+        if (empregados.isEmpty()) {
+            System.out.println("Nenhum empregado cadastrado.");
+        } else {
+            for (Empregado empregado : empregados) {
+                System.out.println(empregado);
+            }
+        }
+    }
+    
+    private static Empregado selecionarEmpregado(Scanner scanner, ArrayList<Empregado> empregados) {
+        if (empregados.isEmpty()) {
+            System.out.println("Nenhum empregado cadastrado.");
+            return null;
+        }
+
+        System.out.println("Selecione um empregado:");
+        for (int i = 0; i < empregados.size(); i++) {
+            System.out.println((i + 1) + ". " + empregados.get(i).getNome());
+        }
+        System.out.print("Escolha o número do empregado: ");
+        int escolha = scanner.nextInt();
+        scanner.nextLine(); 
+        
+        if (escolha > 0 && escolha <= empregados.size()) {
+            return empregados.get(escolha - 1);
+        } else {
+            System.out.println("Escolha inválida.");
+            return null;
+        }
+    }
+}
